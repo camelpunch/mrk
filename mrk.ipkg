@@ -1,0 +1,8 @@
+package Mrk
+
+modules = Mrk
+	, Mrk.Tests
+
+tests = Mrk.Tests.main
+
+pkgs = contrib
