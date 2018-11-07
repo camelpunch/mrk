@@ -8,17 +8,21 @@ import public Data.List
 %access public export
 
 namespace NodeNames
-  data NodeName
-    = Html
-    | Head
-    | Title
-    | Link
-    | Img
-    | Body
-    | Div
-    | P
-    | Ul
-    | Li
+  data NodeName : Type where
+    Html : NodeName
+    Head : NodeName
+    Title : NodeName
+    Link : NodeName
+    H : (n : Nat) ->
+        {auto min : n `GTE` 1} ->
+        {auto max : 6 `GTE` n} ->
+        NodeName
+    Img : NodeName
+    Body : NodeName
+    Div : NodeName
+    P : NodeName
+    Ul : NodeName
+    Li : NodeName
   %name NodeName nodeName
 
   Show NodeName where
@@ -26,6 +30,7 @@ namespace NodeNames
     show Head = "head"
     show Title = "title"
     show Link = "link"
+    show (H n) = "h" ++ show n
     show Img = "img"
     show Body = "body"
     show Div = "div"
@@ -182,7 +187,8 @@ namespace Elements
 
     flowContent : List NodeName
     flowContent =
-      [ Div
+      [ H (S _)
+      , Div
       , Ul
       , P
       , Img
@@ -195,9 +201,10 @@ namespace Elements
       childrenOf Head = [Link, Title]
       childrenOf Title = []
       childrenOf Link = []
+      childrenOf (H n) = []
       childrenOf Img = []
       childrenOf Body = flowContent
-      childrenOf Div = [Ul, Li, Div, P, Img]
+      childrenOf Div = flowContent
       childrenOf P = []
       childrenOf Ul = [Li]
       childrenOf Li = flowContent
@@ -224,6 +231,8 @@ namespace Elements
       openTag name attrs ++ show children ++ closeTag name
 
     Show (Element parent) where
+      show (Generic el attrs (Text "")) =
+        openTag el attrs
       show (Generic el attrs children) =
         openCloseTag el attrs children
       show (Head attrs children) =
@@ -292,6 +301,17 @@ link : (rel : LinkType) ->
        Document parent
 link rel href optionalAttrs =
   tell $ Link rel href optionalAttrs
+
+h : (n : Nat) ->
+    (attrs : List Attribute) ->
+    {auto min : n `GTE` 1} ->
+    {auto max : 6 `GTE` n} ->
+    {auto placement : H n `HasParent` parent} ->
+    {auto attrsAllowed : disallowedAttrs (H n) attrs = []} ->
+    (children : Document (H n)) ->
+    Document parent
+h n attrs children =
+  tell $ Generic (H n) attrs (fromDocument children)
 
 img : (src : URI) ->
       (alt : String) ->

@@ -15,6 +15,9 @@ main = runTests tests where
 
     body [ClassNames ["hi"]] $ do
       div [] $ do
+        h 1 [] $ do
+          text "Main heading"
+
         p [] $ text "some paragraph text"
         img "/someimage.jpg" "another sentence" []
 
@@ -22,7 +25,7 @@ main = runTests tests where
   tests =
        assertEquals
          (show fixture)
-         "<html><head><title>Best site evah</title><link rel=\"stylesheet\" href=\"foo.css\" type=\"text/css\"></head><body class=\"hi\"><div><p>some paragraph text</p><img src=\"/someimage.jpg\" alt=\"another sentence\"></div></body></html>"
+         "<html><head><title>Best site evah</title><link rel=\"stylesheet\" href=\"foo.css\" type=\"text/css\"></head><body class=\"hi\"><div><h1>Main heading</h1><p>some paragraph text</p><img src=\"/someimage.jpg\" alt=\"another sentence\"></div></body></html>"
 
     :: neutral
 
