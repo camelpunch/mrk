@@ -16,12 +16,13 @@ main = runTests tests where
     body [ClassNames ["hi"]] $ do
       div [] $ do
         p [] $ text "some paragraph text"
+        img "/someimage.jpg" "another sentence" []
 
   tests : List (IO Bool)
   tests =
        assertEquals
          (show fixture)
-         "<html><head><title>Best site evah</title><link rel=\"stylesheet\" href=\"foo.css\" type=\"text/css\"/></head><body class=\"hi\"><div><p>some paragraph text</p></div></body></html>"
+         "<html><head><title>Best site evah</title><link rel=\"stylesheet\" href=\"foo.css\" type=\"text/css\"></head><body class=\"hi\"><div><p>some paragraph text</p><img src=\"/someimage.jpg\" alt=\"another sentence\"></div></body></html>"
 
     :: neutral
 

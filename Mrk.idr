@@ -13,6 +13,7 @@ namespace NodeNames
     | Head
     | Title
     | Link
+    | Img
     | Body
     | Div
     | P
@@ -25,6 +26,7 @@ namespace NodeNames
     show Head = "head"
     show Title = "title"
     show Link = "link"
+    show Img = "img"
     show Body = "body"
     show Div = "div"
     show P = "p"
@@ -110,6 +112,8 @@ data Attribute : Type where
   Href : URI -> Attribute
   Rel : LinkType -> Attribute
   MimeType : MimeType -> Attribute
+  Src : URI -> Attribute
+  Alt : String -> Attribute
 %name Attribute attr
 
 showAttr : (name : String) -> (value : String) -> String
@@ -120,6 +124,8 @@ Show Attribute where
   show (Href uri) = showAttr "href" uri
   show (Rel linkType) = showAttr "rel" (show linkType)
   show (MimeType mt) = showAttr "type" (show mt)
+  show (Src uri) = showAttr "src" uri
+  show (Alt alt) = showAttr "alt" alt
 
 Eq Attribute where
   (ClassNames xs) == (ClassNames ys) =
@@ -146,6 +152,12 @@ namespace Elements
              {auto placement : Link `HasParent` parent} ->
              {auto attrsAllowed : disallowedAttrs Link optionalAttrs = []} ->
              Element parent
+      Img : (src : URI) ->
+            (alt : String) ->
+            (optionalAttrs : List Attribute) ->
+            {auto placement : Img `HasParent` parent} ->
+            {auto attrsAllowed : disallowedAttrs Img optionalAttrs = []} ->
+            Element parent
       Head : List Attribute ->
              (children : Element Head) ->
              {auto oneTitle : numTitles children = 1} ->
@@ -168,6 +180,14 @@ namespace Elements
     numTitles (Collection existing new) = numTitles existing + numTitles new
     numTitles _ = 0
 
+    flowContent : List NodeName
+    flowContent =
+      [ Div
+      , Ul
+      , P
+      , Img
+      ]
+
     HasParent : (child : NodeName) -> (parent : NodeName) -> Type
     HasParent child parent = child `Elem` childrenOf parent where
       childrenOf : NodeName -> List NodeName
@@ -175,11 +195,12 @@ namespace Elements
       childrenOf Head = [Link, Title]
       childrenOf Title = []
       childrenOf Link = []
-      childrenOf Body = [Div, Ul]
-      childrenOf Div = [Ul, Li, Div, P]
+      childrenOf Img = []
+      childrenOf Body = flowContent
+      childrenOf Div = [Ul, Li, Div, P, Img]
       childrenOf P = []
       childrenOf Ul = [Li]
-      childrenOf Li = [Div]
+      childrenOf Li = flowContent
 
   Semigroup (Element parent) where
     (<+>) = Collection
@@ -193,9 +214,6 @@ namespace Elements
 
   openTag : NodeName -> List Attribute -> String
   openTag name attrs = "<" ++ show name ++ showAttrs attrs ++ ">"
-
-  selfCloseTag : NodeName -> List Attribute -> String
-  selfCloseTag name attrs = "<" ++ show name ++ showAttrs attrs ++ "/>"
 
   closeTag : NodeName -> String
   closeTag name = "</" ++ show name ++ ">"
@@ -211,7 +229,9 @@ namespace Elements
       show (Head attrs children) =
         openCloseTag Head attrs children
       show (Link rel href optionalAttrs) =
-        selfCloseTag Link (Rel rel :: Href href :: optionalAttrs)
+        openTag Link (Rel rel :: Href href :: optionalAttrs)
+      show (Img src alt optionalAttrs) =
+        openTag Img (Src src :: Alt alt :: optionalAttrs)
       show (Text x) =
         x
       show (Collection x y) =
@@ -272,6 +292,15 @@ link : (rel : LinkType) ->
        Document parent
 link rel href optionalAttrs =
   tell $ Link rel href optionalAttrs
+
+img : (src : URI) ->
+      (alt : String) ->
+      (optionalAttrs : List Attribute) ->
+      {auto placement : Img `HasParent` parent} ->
+      {auto attrsAllowed : disallowedAttrs Img optionalAttrs = []} ->
+      Document parent
+img src alt optionalAttrs =
+  tell $ Img src alt optionalAttrs
 
 stylesheet : (href : URI) ->
              {auto placement : Link `HasParent` parent} ->
