@@ -16,10 +16,22 @@ fixture = do
     div [] $ do
       div [] $ do
         text "Yo"
-      h 1 [] $ do
+      h1 [] $ do
         text "Main heading"
 
-      h 2 [] $ do
+      h2 [] $ do
+        text "Sub heading"
+
+      h3 [] $ do
+        text "Sub heading"
+
+      h4 [] $ do
+        text "Sub heading"
+
+      h5 [] $ do
+        text "Sub heading"
+
+      h6 [] $ do
         text "Sub heading"
 
       p [] $ text "some paragraph text"
@@ -44,6 +56,10 @@ main = runTests tests where
          "<div>Yo</div>" ++
          "<h1>Main heading</h1>" ++
          "<h2>Sub heading</h2>" ++
+         "<h3>Sub heading</h3>" ++
+         "<h4>Sub heading</h4>" ++
+         "<h5>Sub heading</h5>" ++
+         "<h6>Sub heading</h6>" ++
          "<p>some paragraph text</p>" ++
          "<img src=\"/someimage.jpg\" alt=\"another sentence\">" ++
          "</div>" ++

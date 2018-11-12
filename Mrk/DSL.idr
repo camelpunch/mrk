@@ -51,16 +51,53 @@ link : (rel : LinkType) ->
 link rel href optionalAttrs =
   tell $ Link rel href optionalAttrs
 
-h : (n : Nat) ->
-    (attrs : List Attribute) ->
-    {auto min : n `GTE` 1} ->
-    {auto max : 6 `GTE` n} ->
-    {auto placement : H n `HasParent` parent} ->
-    {auto attrsAllowed : disallowedAttrs (H n) attrs = []} ->
-    (children : Document (H n)) ->
-    Document parent
-h n attrs children =
-  tell $ Generic (H n) attrs (fromDocument children)
+h1 : (attrs : List Attribute) ->
+     {auto placement : H 1 `HasParent` parent} ->
+     {auto attrsAllowed : disallowedAttrs (H 1) attrs = []} ->
+     (children : Document (H 1)) ->
+     Document parent
+h1 attrs children =
+  tell $ Generic (H 1) attrs (fromDocument children)
+
+h2 : (attrs : List Attribute) ->
+     {auto placement : H 2 `HasParent` parent} ->
+     {auto attrsAllowed : disallowedAttrs (H 2) attrs = []} ->
+     (children : Document (H 2)) ->
+     Document parent
+h2 attrs children =
+  tell $ Generic (H 2) attrs (fromDocument children)
+
+h3 : (attrs : List Attribute) ->
+     {auto placement : H 3 `HasParent` parent} ->
+     {auto attrsAllowed : disallowedAttrs (H 3) attrs = []} ->
+     (children : Document (H 3)) ->
+     Document parent
+h3 attrs children =
+  tell $ Generic (H 3) attrs (fromDocument children)
+
+h4 : (attrs : List Attribute) ->
+     {auto placement : H 4 `HasParent` parent} ->
+     {auto attrsAllowed : disallowedAttrs (H 4) attrs = []} ->
+     (children : Document (H 4)) ->
+     Document parent
+h4 attrs children =
+  tell $ Generic (H 4) attrs (fromDocument children)
+
+h5 : (attrs : List Attribute) ->
+     {auto placement : H 5 `HasParent` parent} ->
+     {auto attrsAllowed : disallowedAttrs (H 5) attrs = []} ->
+     (children : Document (H 5)) ->
+     Document parent
+h5 attrs children =
+  tell $ Generic (H 5) attrs (fromDocument children)
+
+h6 : (attrs : List Attribute) ->
+     {auto placement : H 6 `HasParent` parent} ->
+     {auto attrsAllowed : disallowedAttrs (H 6) attrs = []} ->
+     (children : Document (H 6)) ->
+     Document parent
+h6 attrs children =
+  tell $ Generic (H 6) attrs (fromDocument children)
 
 img : (src : URI) ->
       (alt : String) ->
