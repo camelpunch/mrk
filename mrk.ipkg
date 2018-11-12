@@ -1,6 +1,7 @@
 package Mrk
 
 modules = Mrk
+	, Mrk.DSL
 	, Mrk.Tests
 
 tests = Mrk.Tests.main
