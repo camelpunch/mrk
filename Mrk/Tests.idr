@@ -2,6 +2,8 @@ module Mrk.Tests
 import Test.Unit
 import Mrk.DSL
 
+%default total
+
 fixture : Document Html
 fixture = do
   head [] $ do
