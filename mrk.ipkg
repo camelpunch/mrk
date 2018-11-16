@@ -1,7 +1,10 @@
 package Mrk
 
-modules = Mrk.Document
+modules = Mrk
+	, Mrk.Attributes
+	, Mrk.Document
 	, Mrk.DSL
+	, Mrk.Elements
 	, Mrk.NodeNames
 	, Mrk.Tests
 
