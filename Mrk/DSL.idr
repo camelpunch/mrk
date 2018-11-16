@@ -1,5 +1,6 @@
 module Mrk.DSL
 
+import Data.Vect
 import public Mrk
 
 %default total
@@ -123,6 +124,20 @@ li : (attrs : List Attribute) ->
      Document parent
 li attrs children =
   tell $ Generic Li attrs (fromDocument children)
+
+data ValidAnchor : (href : Maybe URI) -> (attrs : List Attribute) -> Type where
+  Hyperlink : IsJust href -> ValidAnchor href attrs
+  Placeholder : (IsJust href -> Void) -> (attrs = []) -> ValidAnchor href attrs
+
+a : (href : Maybe URI) ->
+    (attrs : List Attribute) ->
+    (children : Document A) ->
+    {auto validAnchor : ValidAnchor href attrs} ->
+    {auto placement : A `HasParent` parent} ->
+    {auto attrsPrf : disallowedAttrs A attrs = []} ->
+    Document parent
+a Nothing _ children = tell $ AnchorPlaceholder (fromDocument children)
+a (Just uri) attrs children = tell $ AnchorHyperlink uri attrs (fromDocument children)
 
 text : String ->
        Document parent

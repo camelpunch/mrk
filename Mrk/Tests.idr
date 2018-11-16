@@ -12,6 +12,9 @@ fixture = do
     ul [] $ do
       li [] $ do
         text "inside"
+      li [] $ do
+        p [] $ do
+          a (Just "/contact") [Rel Nofollow] $ text "Contact"
 
     div [] $ do
       div [] $ do
@@ -51,7 +54,10 @@ main = runTests tests where
          "<link rel=\"stylesheet\" href=\"foo.css\" type=\"text/css\">" ++
          "</head>" ++
          "<body class=\"hi\">" ++
-         "<ul><li>inside</li></ul>" ++
+         "<ul>" ++
+         "<li>inside</li>" ++
+         "<li><p><a href=\"/contact\" rel=\"nofollow\">Contact</a></p></li>" ++
+         "</ul>" ++
          "<div>" ++
          "<div>Yo</div>" ++
          "<h1>Main heading</h1>" ++

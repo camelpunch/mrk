@@ -23,6 +23,7 @@ namespace NodeNames
     P : NodeName
     Ul : NodeName
     Li : NodeName
+    A : NodeName
   %name NodeName nodeName
 
   Show NodeName where
@@ -37,6 +38,7 @@ namespace NodeNames
     show P = "p"
     show Ul = "ul"
     show Li = "li"
+    show A = "a"
 
 URI : Type
 URI = String
@@ -167,6 +169,15 @@ namespace Elements
              (children : Element Head) ->
              {auto oneTitle : numTitles children = 1} ->
              Element Html
+      AnchorHyperlink : (href : URI) ->
+                        (attrs : List Attribute) ->
+                        (children : Element A) ->
+                        {auto placement : A `HasParent` parent} ->
+                        {auto attrsAllowed : disallowedAttrs A attrs = []} ->
+                        Element parent
+      AnchorPlaceholder : (children : Element A) ->
+                          {auto placement : A `HasParent` parent} ->
+                          Element parent
       Text : String -> Element parent
       Collection : (existing : Element parent) ->
                    (new : Element parent) ->
@@ -178,6 +189,7 @@ namespace Elements
       attrPermitted Link (Href _) = True
       attrPermitted Link (MimeType _) = True
       attrPermitted _ (ClassNames _) = True
+      attrPermitted A (Rel _) = True
       attrPermitted _ _ = False
 
     numTitles : Element Head -> Nat
@@ -197,6 +209,20 @@ namespace Elements
       , Ul
       , P
       , Img
+      ] ++ phrasingContent
+
+    phrasingContent : List NodeName
+    phrasingContent =
+      interactivePhrasingContent ++ nonInteractivePhrasingContent
+
+    interactivePhrasingContent : List NodeName
+    interactivePhrasingContent =
+      [ A
+      ]
+
+    nonInteractivePhrasingContent : List NodeName
+    nonInteractivePhrasingContent =
+      [
       ]
 
     HasParent : (child : NodeName) -> (parent : NodeName) -> Type
@@ -206,13 +232,14 @@ namespace Elements
       childrenOf Head = [Link, Title]
       childrenOf Title = []
       childrenOf Link = []
-      childrenOf (H n) = []
+      childrenOf (H n) = phrasingContent
       childrenOf Img = []
       childrenOf Body = flowContent
       childrenOf Div = flowContent
-      childrenOf P = []
+      childrenOf P = phrasingContent
       childrenOf Ul = [Li]
       childrenOf Li = flowContent
+      childrenOf A = nonInteractivePhrasingContent
 
   Semigroup (Element parent) where
     (<+>) = Collection
@@ -246,6 +273,10 @@ namespace Elements
         openTag Link (Rel rel :: Href href :: optionalAttrs)
       show (Img src alt optionalAttrs) =
         openTag Img (Src src :: Alt alt :: optionalAttrs)
+      show (AnchorHyperlink href attrs children) =
+        openCloseTag A (Href href :: attrs) children
+      show (AnchorPlaceholder children) =
+        openCloseTag A [] children
       show (Text x) =
         x
       show (Collection x y) =
