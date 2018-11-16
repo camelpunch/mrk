@@ -1,7 +1,8 @@
 module Mrk.DSL
 
-import Data.Vect
-import public Mrk
+import public Mrk.Attributes
+import public Mrk.Document
+import public Mrk.Elements
 
 %default total
 %access public export
