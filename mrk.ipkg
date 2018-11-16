@@ -2,6 +2,7 @@ package Mrk
 
 modules = Mrk.Document
 	, Mrk.DSL
+	, Mrk.NodeNames
 	, Mrk.Tests
 
 tests = Mrk.Tests.main
