@@ -31,7 +31,13 @@ mutual
     Head : List Attribute ->
            (children : Element Head) ->
            {auto oneTitle : numTitles children = 1} ->
+           {auto metaPositionValid : ValidMetaPosition children} ->
            Element Html
+    Meta : (firstAttr : Attribute) ->
+           (attrs : List Attribute) ->
+           {auto prf : isValidMetaFirstAttr firstAttr = True} ->
+           {auto attrsAllowed : disallowedAttrs Meta attrs = []} ->
+           Element parent
     AnchorHyperlink : (href : URI) ->
                       (attrs : List Attribute) ->
                       (children : Element A) ->
@@ -45,6 +51,27 @@ mutual
     Collection : (existing : Element parent) ->
                  (new : Element parent) ->
                  Element parent
+
+  isValidMetaFirstAttr : (attr : Attribute) -> Bool
+  isValidMetaFirstAttr (Charset _) = True
+  isValidMetaFirstAttr _ = False
+
+  firstChildMetaCharset : Element el -> Bool
+  firstChildMetaCharset (Meta (Charset _) _) = True
+  firstChildMetaCharset (Collection (Meta (Charset _) _) _) = True
+  firstChildMetaCharset _ = False
+
+  metaCharsetCount : (children : Element el) -> Nat
+  metaCharsetCount (Meta (Charset _) _) = 1
+  metaCharsetCount (Collection (Meta (Charset _) _) rest) = 1 + metaCharsetCount rest
+  metaCharsetCount (Collection _ rest) = metaCharsetCount rest
+  metaCharsetCount _ = 0
+
+  data ValidMetaPosition : (children : Element el) -> Type where
+    FirstChildIsMetaCharset : {auto prf : firstChildMetaCharset children = True} ->
+                              ValidMetaPosition children
+    NoMetaCharset : {auto prf : metaCharsetCount children = 0} ->
+                    ValidMetaPosition children
 
   disallowedAttrs : NodeName -> List Attribute -> List Attribute
   disallowedAttrs nodeName attrs = filter (not . attrPermitted nodeName) attrs where
@@ -92,7 +119,8 @@ mutual
   HasParent child parent = child `Elem` childrenOf parent where
     childrenOf : NodeName -> List NodeName
     childrenOf Html = [Head, Body]
-    childrenOf Head = [Link, Title]
+    childrenOf Head = [Link, Meta, Title]
+    childrenOf Meta = []
     childrenOf Title = []
     childrenOf Link = []
     childrenOf (H n) = phrasingContent
@@ -132,6 +160,8 @@ mutual
       openCloseTag el attrs children
     show (Head attrs children) =
       openCloseTag Head attrs children
+    show (Meta attr attrs) =
+      openTag Meta (attr :: attrs)
     show (Link rel href optionalAttrs) =
       openTag Link (Rel rel :: Href href :: optionalAttrs)
     show (Img src alt optionalAttrs) =

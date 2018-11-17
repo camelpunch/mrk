@@ -10,9 +10,19 @@ import public Mrk.Elements
 head : List Attribute ->
        (children : Document Head) ->
        {auto prf : numTitles (fromDocument children) = 1} ->
+       {auto validMeta : ValidMetaPosition (fromDocument children)} ->
        Document Html
 head attrs children =
   tell $ Head attrs (fromDocument children)
+
+meta : (firstAttr : Attribute) ->
+       (attrs : List Attribute) ->
+       {auto validAttr : isValidMetaFirstAttr firstAttr = True} ->
+       {auto prf : disallowedAttrs Meta attrs = []} ->
+       {auto placement : Meta `HasParent` parent} ->
+       Document parent
+meta firstAttr attrs =
+  tell $ Meta firstAttr attrs
 
 title : (attrs : List Attribute) ->
         (text : String) ->

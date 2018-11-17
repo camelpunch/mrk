@@ -7,6 +7,7 @@ import Mrk.DSL
 fixture : Document Html
 fixture = do
   head [] $ do
+    meta (Charset UTF8) []
     title [] "Best site evah"
     stylesheet "foo.css"
 
@@ -52,6 +53,7 @@ main = runTests tests where
          (
          "<html>" ++
          "<head>" ++
+         "<meta charset=\"utf-8\">" ++
          "<title>Best site evah</title>" ++
          "<link rel=\"stylesheet\" href=\"foo.css\" type=\"text/css\">" ++
          "</head>" ++

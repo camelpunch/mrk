@@ -2,6 +2,7 @@ package Mrk
 
 modules = Mrk
 	, Mrk.Attributes
+	, Mrk.Charsets
 	, Mrk.Document
 	, Mrk.DSL
 	, Mrk.Elements

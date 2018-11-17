@@ -6,6 +6,7 @@ module Mrk.NodeNames
 data NodeName : Type where
   Html : NodeName
   Head : NodeName
+  Meta : NodeName
   Title : NodeName
   Link : NodeName
   H : (n : Nat) ->
@@ -24,6 +25,7 @@ data NodeName : Type where
 Show NodeName where
   show Html = "html"
   show Head = "head"
+  show Meta = "meta"
   show Title = "title"
   show Link = "link"
   show (H n) = "h" ++ show n
