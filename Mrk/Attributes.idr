@@ -11,7 +11,7 @@ URI : Type
 URI = String
 
 data Attribute : Type where
-  ClassNames : List String -> Attribute
+  ClassNames : (Show a, Eq a) => List a -> Attribute
   Href : URI -> Attribute
   Rel : LinkType -> Attribute
   MimeType : MimeType -> Attribute
@@ -24,7 +24,7 @@ showAttr : (name : String) -> (value : String) -> String
 showAttr name value = name ++ "=\"" ++ value ++ "\""
 
 Show Attribute where
-  show (ClassNames names) = showAttr "class" (unwords names)
+  show (ClassNames names) = showAttr "class" (unwords (map show names))
   show (Href uri) = showAttr "href" uri
   show (Rel linkType) = showAttr "rel" (show linkType)
   show (MimeType mt) = showAttr "type" (show mt)
@@ -34,7 +34,7 @@ Show Attribute where
 
 Eq Attribute where
   (ClassNames xs) == (ClassNames ys) =
-    xs == ys
+    show xs == show ys
   (Href x) == (Href y) =
     x == y
   (Rel x) == (Rel y) =
