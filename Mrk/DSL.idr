@@ -7,6 +7,13 @@ import public Mrk.Elements
 %default total
 %access public export
 
+html : (attrs : List Attribute) ->
+       (children : Document Html) ->
+       {auto attrsPrf : disallowedAttrs Html attrs = []} ->
+       Document Root
+html attrs children =
+  tell $ Generic Html attrs (fromDocument children)
+
 head : List Attribute ->
        (children : Document Head) ->
        {auto prf : numTitles (fromDocument children) = 1} ->

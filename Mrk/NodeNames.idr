@@ -4,6 +4,7 @@ module Mrk.NodeNames
 %access public export
 
 data NodeName : Type where
+  Root : NodeName
   Html : NodeName
   Head : NodeName
   Meta : NodeName
@@ -23,6 +24,7 @@ data NodeName : Type where
 %name NodeName nodeName
 
 Show NodeName where
+  show Root = ""
   show Html = "html"
   show Head = "head"
   show Meta = "meta"

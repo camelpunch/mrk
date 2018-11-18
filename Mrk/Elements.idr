@@ -118,6 +118,7 @@ mutual
   HasParent : (child : NodeName) -> (parent : NodeName) -> Type
   HasParent child parent = child `Elem` childrenOf parent where
     childrenOf : NodeName -> List NodeName
+    childrenOf Root = [Html]
     childrenOf Html = [Head, Body]
     childrenOf Head = [Link, Meta, Title]
     childrenOf Meta = []

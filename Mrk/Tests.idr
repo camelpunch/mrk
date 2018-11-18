@@ -7,44 +7,45 @@ import Mrk.DSL
 AttributeValue String where
   toAttr = id
 
-fixture : Document Html
+fixture : Document Root
 fixture = do
-  head [] $ do
-    meta (Charset UTF8) []
-    title [] "Best site evah"
-    stylesheet "foo.css"
+  html [] $ do
+    head [] $ do
+      meta (Charset UTF8) []
+      title [] "Best site evah"
+      stylesheet "foo.css"
 
-  body [ClassNames ["hi"]] $ do
-    ul [] $ do
-      li [] $ do
-        text "inside"
-      li [] $ do
-        p [] $ do
-          a (Just "/contact") [Rel Nofollow] $ text "Contact"
+    body [ClassNames ["hi"]] $ do
+      ul [] $ do
+        li [] $ do
+          text "inside"
+        li [] $ do
+          p [] $ do
+            a (Just "/contact") [Rel Nofollow] $ text "Contact"
 
-    div [] $ do
       div [] $ do
-        text "Yo"
-      h1 [] $ do
-        text "Main heading"
+        div [] $ do
+          text "Yo"
+        h1 [] $ do
+          text "Main heading"
 
-      h2 [] $ do
-        text "Sub heading"
+        h2 [] $ do
+          text "Sub heading"
 
-      h3 [] $ do
-        text "Sub heading"
+        h3 [] $ do
+          text "Sub heading"
 
-      h4 [] $ do
-        text "Sub heading"
+        h4 [] $ do
+          text "Sub heading"
 
-      h5 [] $ do
-        text "Sub heading"
+        h5 [] $ do
+          text "Sub heading"
 
-      h6 [] $ do
-        text "Sub heading"
+        h6 [] $ do
+          text "Sub heading"
 
-      p [] $ text "some paragraph text"
-      img "/someimage.jpg" "another sentence" []
+        p [] $ text "some paragraph text"
+        img "/someimage.jpg" "another sentence" []
 
 export
 main : IO ()
