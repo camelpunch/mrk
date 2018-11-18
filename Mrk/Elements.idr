@@ -156,21 +156,24 @@ mutual
   Show (Element parent) where
     show (Generic el attrs (Text "")) =
       openTag el attrs
+    show (Generic Html attrs children) =
+      "<!doctype html>" ++
+      openCloseTag Html attrs children
     show (Generic el attrs children) =
       openCloseTag el attrs children
     show (Head attrs children) =
       openCloseTag Head attrs children
     show (Meta attr attrs) =
       openTag Meta (attr :: attrs)
-    show (Link rel href optionalAttrs) =
-      openTag Link (Rel rel :: Href href :: optionalAttrs)
-    show (Img src alt optionalAttrs) =
-      openTag Img (Src src :: Alt alt :: optionalAttrs)
+    show (Link rel href attrs) =
+      openTag Link (Rel rel :: Href href :: attrs)
+    show (Img src alt attrs) =
+      openTag Img (Src src :: Alt alt :: attrs)
     show (AnchorHyperlink href attrs children) =
       openCloseTag A (Href href :: attrs) children
     show (AnchorPlaceholder children) =
       openCloseTag A [] children
-    show (Text x) =
-      x
+    show (Text s) =
+      s
     show (Collection x y) =
-       show x ++ show y
+      show x ++ show y

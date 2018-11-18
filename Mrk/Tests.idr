@@ -4,6 +4,9 @@ import Mrk.DSL
 
 %default total
 
+AttributeValue String where
+  toAttr = id
+
 fixture : Document Html
 fixture = do
   head [] $ do
@@ -51,6 +54,7 @@ main = runTests tests where
        assertEquals
          (show fixture)
          (
+         "<!doctype html>" ++
          "<html>" ++
          "<head>" ++
          "<meta charset=\"utf-8\">" ++

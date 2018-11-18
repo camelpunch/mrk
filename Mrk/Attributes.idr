@@ -10,8 +10,11 @@ import public Mrk.Charsets
 URI : Type
 URI = String
 
+interface AttributeValue a where
+  toAttr : a -> String
+
 data Attribute : Type where
-  ClassNames : (Show a, Eq a) => List a -> Attribute
+  ClassNames : AttributeValue a => List a -> Attribute
   Href : URI -> Attribute
   Rel : LinkType -> Attribute
   MimeType : MimeType -> Attribute
@@ -24,7 +27,7 @@ showAttr : (name : String) -> (value : String) -> String
 showAttr name value = name ++ "=\"" ++ value ++ "\""
 
 Show Attribute where
-  show (ClassNames names) = showAttr "class" (unwords (map show names))
+  show (ClassNames names) = showAttr "class" (unwords (map toAttr names))
   show (Href uri) = showAttr "href" uri
   show (Rel linkType) = showAttr "rel" (show linkType)
   show (MimeType mt) = showAttr "type" (show mt)
@@ -34,7 +37,7 @@ Show Attribute where
 
 Eq Attribute where
   (ClassNames xs) == (ClassNames ys) =
-    show xs == show ys
+    map toAttr xs == map toAttr ys
   (Href x) == (Href y) =
     x == y
   (Rel x) == (Rel y) =
