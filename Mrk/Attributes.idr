@@ -1,5 +1,6 @@
 module Attributes
 
+import public Mrk.Languages
 import public Mrk.LinkTypes
 import public Mrk.MimeTypes
 import public Mrk.Charsets
@@ -16,6 +17,7 @@ interface AttributeValue a where
 data Attribute : Type where
   ClassNames : AttributeValue a => List a -> Attribute
   Href : URI -> Attribute
+  Lang : Language -> Attribute
   Rel : LinkType -> Attribute
   MimeType : MimeType -> Attribute
   Src : URI -> Attribute
@@ -29,6 +31,7 @@ showAttr name value = name ++ "=\"" ++ value ++ "\""
 Show Attribute where
   show (ClassNames names) = showAttr "class" (unwords (map toAttr names))
   show (Href uri) = showAttr "href" uri
+  show (Lang lang) = showAttr "lang" (show lang)
   show (Rel linkType) = showAttr "rel" (show linkType)
   show (MimeType mt) = showAttr "type" (show mt)
   show (Src uri) = showAttr "src" uri

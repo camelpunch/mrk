@@ -6,6 +6,7 @@ modules = Mrk
 	, Mrk.Document
 	, Mrk.DSL
 	, Mrk.Elements
+        , Mrk.Languages
 	, Mrk.LinkTypes
 	, Mrk.MimeTypes
 	, Mrk.NodeNames

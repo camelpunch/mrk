@@ -76,6 +76,7 @@ mutual
   disallowedAttrs : NodeName -> List Attribute -> List Attribute
   disallowedAttrs nodeName attrs = filter (not . attrPermitted nodeName) attrs where
     attrPermitted : NodeName -> Attribute -> Bool
+    attrPermitted Html (Lang _) = True
     attrPermitted Link (Href _) = True
     attrPermitted Link (MimeType _) = True
     attrPermitted _ (ClassNames _) = True
